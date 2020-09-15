@@ -9,8 +9,6 @@ case "$choice" in
     systemctl start openvpn@server
     # Add the following iptables rule so that traffic can leave the VPN. Change the eth0 with the public network interface of your server
     iptables -t nat -A POSTROUTING -s 10.10.110.0/24 -o ens4 -j MASQUERADE
-    chmod +x /etc/rc.local;
-    fi
     # Allow IP forwarding
     sed -i 's|#net.ipv4.ip_forward=1|net.ipv4.ip_forward=1|' /etc/sysctl.conf
     echo 1 > /proc/sys/net/ipv4/ip_forward;;
