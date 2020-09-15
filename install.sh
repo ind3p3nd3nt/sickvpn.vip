@@ -11,7 +11,7 @@ then
     # Add the following iptables rule so that traffic can leave the VPN. Change the eth0 with the public network interface of your server
     iptables -t nat -A POSTROUTING -s 10.10.110.0/24 -o ens4 -j MASQUERADE
     1f [ -f /etc/rc.local ]; then 
-    sed -i 's|^exit 0|iptables -t nat -A POSTROUTING -s 10.10.100.0/24 -o ens4 -j MASQUERADE\n\nexit 0|' /etc/rc.local;
+    sed -i 's|^exit 0|iptables -t nat -A POSTROUTING -s 10.10.110.0/24 -o ens4 -j MASQUERADE\n\nexit 0|' /etc/rc.local;
     else
     cat << EOF > /etc/rc.local
     #!/bin/sh -e
