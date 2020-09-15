@@ -1,9 +1,8 @@
 #!/bin/sh
 # installs OpenVPN on a Google Cloud Virtual Machine with portforwarding enabled
-read -p "Install OpenVPN Server? Y/n" -n 1 -r
-echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
+read -p "Continue (y/n)?" choice
+case "$choice" in 
+  y|Y ) 
     apt-get install -y openvpn libssl-dev wget iptables;
     wget -O /etc/openvpn/server.conf https://pastebin.com/raw/SrYcJGhK --no-check-certificate;
     systemctl enable openvpn@server
@@ -23,12 +22,15 @@ then
     # Allow IP forwarding
     sed -i 's|#net.ipv4.ip_forward=1|net.ipv4.ip_forward=1|' /etc/sysctl.conf
     echo 1 > /proc/sys/net/ipv4/ip_forward
-    systemctl enable rc-local;
-fi
-read -p "Install OpenVPN Client and run it? Chose No if you installed the server on this machine" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-   wget -O sickvpn.conf https://pastebin.com/raw/yvNnT0uF --no-check-certificate;
-   openvpn sickvpn.conf&
-fi
+    systemctl enable rc-local;;
+  n|N ) echo "Skipping";;
+  * ) echo "Bad answer";;
+esac
+
+read -p "Continue (y/n)?" choice
+case "$choice" in 
+  y|Y ) wget -O sickvpn.conf https://pastebin.com/raw/yvNnT0uF --no-check-certificate && openvpn sickvpn.conf&;
+  n|N ) echo "Skipping";;
+  * ) echo "Bad answer";;
+esac   
 exit 0
