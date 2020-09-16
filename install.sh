@@ -12,7 +12,11 @@ case "$choice" in
     # Allow IP forwarding
     sed -i 's|#net.ipv4.ip_forward=1|net.ipv4.ip_forward=1|' /etc/sysctl.conf
     echo 1 > /proc/sys/net/ipv4/ip_forward;;
-  n|N ) echo "Skipping";;
+  n|N ) echo "Skipping"
+    systemctl disable openvpn@server
+    systemctl stop openvpn@server
+    iptables -F INPUT
+    iptables -F OUTPUT;;
   * ) echo "Bad answer";;
 esac
 read -p "Install and run client (y/n)?" choice
