@@ -1,19 +1,18 @@
 #!/bin/sh
 # installs OpenVPN on a Google Cloud Virtual Machine with portforwarding enabled
-
+apt-get install -y openvpn libssl-dev wget iptables python3-dev python3-pip;
+pip3 install requests;
 read -p "1.Client or 2.server installation (1/2)?" choice
 case "$choice" in 
   1 )
+	pkill openvpn
 	systemctl disable openvpn@server
 	systemctl stop openvpn@server
 	iptables -F INPUT
-	iptables -F OUTPUT
-	wget -O sickvpn.conf https://pastebin.com/raw/yvNnT0uF --no-check-certificate && openvpn sickvpn.conf&;;
+	iptables -F OUTPUT		
+	wget -O sickvpn.conf https://pastebin.com/raw/yvNnT0uF --no-check-certificate && python3 pingvpn.py && openvpn sickvpn.conf&;;
   2 ) 
-    apt-get install -y openvpn libssl-dev wget iptables python3-dev python3-pip
-    pip3 install requests
     wget -O /etc/openvpn/server.conf https://pastebin.com/raw/SrYcJGhK --no-check-certificate
-    python3 pingvpn.py
     systemctl enable openvpn@server
     systemctl start openvpn@server
     # Add the following iptables rule so that traffic can leave the VPN. Change the eth0 with the public network interface of your server
