@@ -71,7 +71,7 @@ if __name__ == "__main__":
 		sys.exit("[!] Must run as root/sudo\n")
 	print("[+] Getting VPN list ...")
 	response = requests.get('https://pastebin.com/raw/6bUSXSrY', verify=False).text
-	urls = re.findall(r'(\+)*[a-z]*\.sickvpn\.vip(\+)*',response)
+	urls = re.findall(r"\^*.*\.sickvpn\.vip+",response)
 	print(urls)
 	# Banner
 	print("#")
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 	print("#\n")
 	# Preparing
 	https = True
-	schema = 'https' if https else 'http'
+	schema = 'https://' if https else 'http://'
 	new_urls = fetch_url(urls,schema)
 
 	VPNs = {}
