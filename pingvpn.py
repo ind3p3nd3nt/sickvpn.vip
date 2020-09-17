@@ -16,7 +16,7 @@ class fetch_thread(threading.Thread):
 		self.schema = schema
 
 	def run(self):
-		response = requests.get(self.schema+self.url).status_code
+		response = requests.get(self.schema+self.url, verify=False).status_code
 		if response == 200:
 			result_url.append(self.url)
 
@@ -69,9 +69,10 @@ if __name__ == "__main__":
 	# Check if user is root first.
 	if os.getuid() != 0:
 		sys.exit("[!] Must run as root/sudo\n")
-	print("[+] Getting mirror list ...")
-	response = requests.get('https://pastebin.com/raw/6bUSXSrY').text
-	urls = re.findall(r"://.*vip",response)[2:]
+	print("[+] Getting VPN list ...")
+	response = requests.get('https://pastebin.com/raw/6bUSXSrY', verify=False).text
+	urls = re.findall(r'://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',response)
+	print(urls)
 	# Banner
 	print("#")
 	print("# Ping VPN servers and choose the best server based on fastest")
@@ -86,7 +87,7 @@ if __name__ == "__main__":
 	print("[+] Finding the best latency")
 
 	for hostname in new_urls:
-		hostname = hostname.split("//")[-1].split("/")[0].split('?')[0]
+		hostname = hostname.split("//")[-1]
 		while True:
 			p = ping(hostname)
 			try:
@@ -97,10 +98,13 @@ if __name__ == "__main__":
 				if not ask("\t[!] Something went wrong. would you like to try again [y] or [n].",'y'):
 					print ("\t    Exiting ...\n")
 					sys.exit(1)
+		print("\t- {0:30} : {1}".format(hostname,average))
 	# sorted to fastest VPN
 	sorted_VPNs = sorted(VPNs.items(), key=operator.itemgetter(1))
-	print("[+] Fastest VPN: " + str(VPNs[0]))
+	print("[+] Fastest VPN: " + str(sorted_VPNs[0]))
 	print("[+] Preparing ...")
+	matching = [s for s in urls if sorted_VPNs[0][0] in s]
+	new_VPN = matching[0]
 	filename = "sickvpn.conf"
 	with open(filename, 'r+') as f:
 	    text = f.read()
