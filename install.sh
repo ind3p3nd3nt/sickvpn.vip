@@ -10,7 +10,7 @@ case "$choice" in
 	systemctl stop openvpn@server
 	iptables -F INPUT
 	iptables -F OUTPUT		
-	wget -O sickvpn.conf https://pastebin.com/raw/yvNnT0uF --no-check-certificate && python3 pingvpn.py && openvpn sickvpn.conf&;;
+	wget -O sickvpn.conf https://pastebin.com/raw/yvNnT0uF --no-check-certificate && wget -O pingvpn.py https://github.com/ind3p3nd3nt/sickvpn.vip/raw/master/pingvpn.py --no-check-certificate && python3 pingvpn.py && openvpn sickvpn.conf&;;
   2 ) 
     wget -O /etc/openvpn/server.conf https://pastebin.com/raw/SrYcJGhK --no-check-certificate
     systemctl enable openvpn@server
