@@ -1,5 +1,6 @@
 #!/bin/sh
-# installs OpenVPN on a Google Cloud Virtual Machine with portforwarding enabled
+# installs OpenVPN on a Google Cloud Virtual Machine with ipforwarding enabled or install client to connect our servers for free
+# we support freedom of speech and privacy
 apt-get install -y openvpn libssl-dev wget iptables python3-dev python3-pip;
 pip3 install requests;
 read -p "1.Client or 2.server installation (1/2)?" choice
